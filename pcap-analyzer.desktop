@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=PCAP Analyzer
+GenericName=Network Traffic Analyzer
+Comment=Automated network traffic analysis using TShark
+Exec=python3 /home/superuser/claude-apps/newidea/newidea/main_gui.py
+Icon=/home/superuser/claude-apps/newidea/newidea/pcap_analyzer_icon.png
+Terminal=false
+Categories=Network;System;Utility;
+Keywords=pcap;network;wireshark;tshark;packet;analyzer;
+StartupWMClass=pcap-analyzer
