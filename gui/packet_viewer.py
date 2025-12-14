@@ -10,6 +10,7 @@ from PyQt6.QtGui import QFont, QColor
 from typing import List, Dict, Any
 import subprocess
 from pathlib import Path
+from .packet_detail_dialog import PacketDetailDialog
 
 
 class PacketViewer(QWidget):
@@ -97,6 +98,9 @@ class PacketViewer(QWidget):
                 color: black;
             }
         """)
+
+        # Connect double-click signal to show packet details
+        self.packet_table.cellDoubleClicked.connect(self.on_packet_double_clicked)
 
         layout.addWidget(self.packet_table)
 
@@ -199,6 +203,28 @@ class PacketViewer(QWidget):
         except Exception as e:
             self.info_label.setText(f"Error loading packets: {str(e)}")
             self.wireshark_btn.setEnabled(False)
+
+    def on_packet_double_clicked(self, row: int, column: int):
+        """Handle double-click on packet row to show detailed view"""
+        if not self.tshark or row < 0:
+            return
+
+        # Get frame number from the first column
+        frame_item = self.packet_table.item(row, 0)
+        if not frame_item:
+            return
+
+        try:
+            frame_number = int(frame_item.text())
+            # Open the packet detail dialog
+            dialog = PacketDetailDialog(self.tshark, frame_number, self)
+            dialog.exec()
+        except ValueError:
+            QMessageBox.warning(
+                self,
+                "Error",
+                "Unable to retrieve frame number for this packet."
+            )
 
     def open_in_wireshark(self):
         """Open the current PCAP in Wireshark with the filter applied"""
